@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Preview</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .invoice-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin: 40px auto;
+      max-width: 900px;
+    }
+    .invoice-header {
+      border-bottom: 2px solid #dee2e6;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+    .table th {
+      background-color: #f1f3f5;
+    }
+    .totals {
+      font-weight: bold;
+    }
+    .btn-custom {
+      border-radius: 30px;
+      padding: 8px 20px;
+    }
+    @media print {
+    .noprint {
+      display: none !important;
+    }
+  }
+  @page {
+  margin: 20mm;
+  }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="invoice-box">
+        <div class="invoice-header text-center">
+          <h2 class="fw-bold">Baker Street</h2>
+          <p>13,Busy street | +91 7628739456</p>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; font-family: Arial, sans-serif; font-size: 14px;">
+            <p>Bill No: {{bill.invoice_number}}</p>
+            <p>Date: {{ bill.date|date:"d M Y" }}</p>
+          </div>
+        </div>
+        <!--to add customer info-->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; font-family: Arial, sans-serif; font-size: 14px;">
+          <div>
+            <p><strong>Customer Name:</strong> {{bill.customer.name}}</p>
+            <p><strong>Customer Phone Number:</strong> {{bill.customer.phone|default:"xxx"}}</p>
+          </div>
+          <div>
+            <p><strong>Customer Email:</strong> {{bill.customer.email}}</p>
+          </div>
+        </div>
+        <!-- Items Table -->
+        <table class="table table-bordered align-middle text-center">
+          <thead>
+            <tr>
+              <th>Item No</th>
+              <th>Item Name</th>
+              <th>Qty</th>
+              <th>Price (₹)</th>
+              <th>Total (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>{{forloop.counter}}</td>
+              <td>{{ item.item_name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.total }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <!-- Totals -->
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6">
+            <table class="table table-borderless">
+              <tr>
+                <td class="text-end">Subtotal:</td>
+                <td class="text-end">₹ {{ bill.subtotal }}</td>
+              </tr>
+              <tr>
+                <td class="text-end">Discount:</td>
+                <td class="text-end">₹ {{ bill.discount }}</td>
+              </tr>
+              <tr>
+                <td class="text-end">CGST (2.5%):</td>
+                <td class="text-end">₹ {{ bill.cgst }}</td>
+              </tr>
+              <tr>
+                <td class="text-end">SGST (2.5%):</td>
+                <td class="text-end">₹ {{ bill.sgst }}</td>
+              </tr>
+              <tr>
+                <td class="text-end">GST (5%):</td>
+                <td class="text-end">₹ {{ bill.gst }}</td>
+              </tr>
+              <tr class="totals">
+                <td class="text-end">Final Total:</td>
+                <td class="text-end">₹ {{ bill.total }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="text-center mt-5">
+          <p class="text-muted">Thank you for making your day sweeter with us!  Have a nice day!🩷 </p>
+          <p class="text-muted">Visit us again!</p>
+          <!-- Buttons -->
+          <div class="text-center mt-4 noprint">
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-custom">⬅ Go Back</a>
+          </div>
+          <div class="text-center mt-4 noprint">
+            <a href="{% url 'send_bill_email' bill.id %}" class="btn btn-success">📧 Send to Email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% if messages %}
+    <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: '{% for message in messages %}{{ message }}{% endfor %}',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      window.location.href = "{% url 'home' %}";   //Redirect to home after OK
+    });
+    </script>
+    {% endif %}
+  </body>
+  </html>
