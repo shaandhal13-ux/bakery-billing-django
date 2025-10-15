@@ -67,3 +67,6 @@ python manage.py runserver
 | **Backend** | Django (Python) |
 | **Database** | MySQL |
 | **Other Tools** | MySQL Workbench, xhtml2pdf, SMTP |
+
+## 📄LICENSE
+This project is licensed under the MIT License — you are free to use, modify, and distribute it with proper credit.
