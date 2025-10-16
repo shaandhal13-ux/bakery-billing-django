@@ -5,8 +5,8 @@ It automatically generates bills with **GST**, maintains records with **date && 
 ## Installation & Setup
 1️⃣ **Clone the Repository**
 ```bash
-git clone https://github.com/<your-username>/Bakery-Billing-Project-Django-.git
-cd Bakery-Billing-Project-Django-
+git clone https://github.com/shaandhal13-ux/bakery-billing-django.git
+cd bakery-billing-django
 ```
 
 2️⃣ **Create Virtual Environment**
